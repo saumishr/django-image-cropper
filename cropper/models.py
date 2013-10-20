@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.conf import settings as django_settings
 from cropper import settings
-import Image
+from PIL import Image
 import os
 import uuid
 
@@ -77,10 +77,12 @@ class Cropped(models.Model):
                                    default=0)
     w = models.PositiveIntegerField(_('cropped area width'),
                                     blank=True,
-                                    null=True)
+                                    null=True,
+                                    default=0)
     h = models.PositiveIntegerField(_('cropped area height'),
                                     blank=True,
-                                    null=True)
+                                    null=True,
+                                    default=0)
 
     class Meta(object):
         verbose_name = _('cropped image')

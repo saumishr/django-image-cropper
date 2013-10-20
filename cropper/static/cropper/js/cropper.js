@@ -1,6 +1,6 @@
 (function($){
     var cropbox = $('#cropbox'),
-        preview = $('#preview'),
+        preview = $('#previewCrop'),
         cropboxHeight = cropbox.height(),
         cropboxWidth  = cropbox.width(),
         previewHeight = preview.closest('DIV').height(),
@@ -32,17 +32,19 @@
             onChange: showPreview,
             onSelect: showPreview,
             bgColor   : '#cccccc',
-            bgOpacity : 0.8
-
-         //   aspectRatio: 1
+            bgOpacity : 0.8,
+            sideHandles : true,
+            aspectRatio: 1
         });
+
 
         $('#crop-form').submit(function(){
             $.post(
                 $(this).attr('action'),
                 $(this).serialize(),
                 function(json){
-                
+                    parent.$.fancybox.close();
+                    parent.$('#refreshActivity').click();
                 }, 'json'
             );
             return false;

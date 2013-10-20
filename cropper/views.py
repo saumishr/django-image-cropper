@@ -65,11 +65,31 @@ class CropView(FormView):
         """
         Default success crop handler
         """
-        return HttpResponse(json.dumps({'image': {'url': cropped.image.url,
-                                                  'width': cropped.w,
-                                                  'height': cropped.h,
-            }}), mimetype='application/x-json') if request.is_ajax() else \
+        width = cropped.w
+        height = cropped.h 
+        url = cropped.image.url
+        storage, path = original.image.storage, original.image.path
+        storage.delete(path)
+
+        cropped.original.image = cropped.image
+        cropped.original.save()
+
+
+        if request.is_ajax():
+            return HttpResponse(json.dumps({'image': {'url': url,
+                                                    'width': width,
+                                                    'height':height,
+                                                     }}), mimetype='application/x-json');
+        else:
             render(request, 'cropper/crop.html', {'form': form,
                                                   'cropped': cropped,
                                                   'original': original
             })
+        #return HttpResponse(json.dumps({'image': {'url': cropped.image.url,
+        #                                          'width': cropped.w,
+        #                                          'height': cropped.h,
+        #    }}), mimetype='application/x-json') if request.is_ajax() else \
+        #    render(request, 'cropper/crop.html', {'form': form,
+        #                                          'cropped': cropped,
+        #                                          'original': original
+        #    })
