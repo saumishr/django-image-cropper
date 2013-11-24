@@ -76,16 +76,16 @@ class CropView(FormView):
         cropped.original.save()
 
 
-#        if request.is_ajax():
-        return HttpResponse(json.dumps({'image': {'url': url,
+        if request.is_ajax():
+            return HttpResponse(json.dumps({'image': {'url': url,
                                                     'width': width,
                                                     'height':height,
                                                      }}), mimetype='application/x-json');
-       # else:
-       #    render(request, 'cropper/crop.html', {'form': form,
-       #                                         'cropped': cropped,
-       #                                        'original': original
-       # })
+        else:
+           render(request, 'cropper/crop.html', {'form': form,
+                                                'cropped': cropped,
+                                               'original': original
+        })
         #return HttpResponse(json.dumps({'image': {'url': cropped.image.url,
         #                                          'width': cropped.w,
         #                                          'height': cropped.h,
