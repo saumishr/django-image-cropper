@@ -6,7 +6,11 @@ from cropper import settings
 from PIL import Image
 import os
 import uuid
+from storages.backends.s3boto import S3BotoStorage
+import  cStringIO, StringIO
+import urllib
 
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 def dimension_validator(image):
     """
@@ -35,7 +39,9 @@ class Original(models.Model):
                               upload_to=upload_image,
                               width_field='image_width',
                               height_field='image_height',
-                              validators=[dimension_validator])
+                              validators=[dimension_validator],
+                              storage=S3BotoStorage(location=django_settings.STORAGE_ROOT))
+
     image_width = models.PositiveIntegerField(_('Image width'),
                                               editable=False,
                                               default=0)
@@ -52,17 +58,29 @@ class Cropped(models.Model):
         return '%s/crop-%s' % (settings.ROOT, filename)
 
     def save(self, *args, **kwargs):
-        source = self.original.image.path
-        target = self.upload_image(os.path.basename(source))
+        storage = S3BotoStorage(location=django_settings.STORAGE_ROOT)
+        source_url = self.original.image.url
+        filename = os.path.basename(self.original.image.name)
+        target = self.upload_image(filename)
+	
+        fp = urllib.urlopen(source_url)
+        source = cStringIO.StringIO(fp.read())
 
-        Image.open(source).crop([
+        mod_image = Image.open(source).crop([
             self.x,             # Left
             self.y,             # Top
             self.x + self.w,    # Right
             self.y + self.h     # Bottom
-        ]).save(django_settings.MEDIA_ROOT + os.sep + target)
+        ])#.save(django_settings.MEDIA_URL + target)
 
+        out_image = StringIO.StringIO()
+        out_image.seek(0)
+        mod_image.save(out_image, 'JPEG')
+
+        newFile = InMemoryUploadedFile(out_image, None, os.path.basename(target), 'image/jpeg', out_image.len, None)
+        storage.save(target, out_image)
         self.image = target
+
         super(Cropped, self).save(*args, **kwargs)
 
     original = models.ForeignKey(Original,
@@ -70,7 +88,9 @@ class Cropped(models.Model):
                                  verbose_name=_('Original image'))
     image = models.ImageField(_('Image'),
                               upload_to=upload_image,
-                              editable=False)
+                              editable=False,
+                              storage=S3BotoStorage(location=django_settings.STORAGE_ROOT)
+				)
     x = models.PositiveIntegerField(_('offset X'),
                                    default=0)
     y = models.PositiveIntegerField(_('offset Y'),

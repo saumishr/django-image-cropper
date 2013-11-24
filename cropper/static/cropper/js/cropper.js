@@ -37,7 +37,6 @@
             aspectRatio: 1
         });
 
-
         $('#crop-form').submit(function(){
             $.post(
                 $(this).attr('action'),
