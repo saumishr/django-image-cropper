@@ -13,9 +13,11 @@
     <div>
         <form method="post" id="crop-form" action="{{ original.get_absolute_url }}">
         {% csrf_token %}
-        {{ form.as_p }}
-        <p><input type="submit" value="{% trans "Crop" %}" /></p>
+        {{ form }}
+        <input class="submitButton colorWhite fontTitillium1 fontSize13 pull-right bottomHalfGutter topHalfGutter" type="submit" value="{% trans "Crop" %}" />
+        <button class="submitButton colorWhite fontTitillium1 fontSize13 pull-right bottomHalfGutter topHalfGutter" onclick="parent.$.fancybox.close();parent.$('#refreshActivity').click();return false;">Use Original</button>
         </form>
     </div>
+
     <script type="text/javascript" src="{{ STATIC_URL }}cropper/js/cropper.js">&nbsp;</script>
 {% endblock %}

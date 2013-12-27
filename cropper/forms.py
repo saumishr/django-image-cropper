@@ -61,5 +61,9 @@ class CroppedForm(forms.ModelForm):
         model = Cropped
         widgets = {
             'original': forms.HiddenInput(),
+            'x': forms.HiddenInput(),
+            'y': forms.HiddenInput(),
+            'w': forms.HiddenInput(),
+            'h': forms.HiddenInput(),
         }
 

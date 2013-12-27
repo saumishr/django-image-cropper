@@ -1,0 +1,11 @@
+.submitButton {
+	border: 0;
+	padding: 6px 10px;
+	box-shadow: 1px 1px 1px rgba(136, 126, 129, 0.75);
+	filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=1, OffY=1, Color='#887E81');
+	margin-top: -1px;
+	background-color: rgb(2, 151, 149);
+}
+.colorWhite {
+	color: white;
+}
