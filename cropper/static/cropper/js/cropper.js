@@ -34,7 +34,9 @@
             bgColor   : '#cccccc',
             bgOpacity : 0.8,
             sideHandles : true,
-            aspectRatio: 1
+            aspectRatio: 1,
+            boxWidth: 500, 
+            boxHeight: 500
         });
 
 
