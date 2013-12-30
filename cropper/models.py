@@ -6,7 +6,6 @@ from cropper import settings
 from PIL import Image
 import os
 import uuid
-
 def dimension_validator(image):
     """
     """
