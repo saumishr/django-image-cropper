@@ -36,6 +36,8 @@ class Original(models.Model):
         return 'cropper_crop', [self.pk]
 
     def save(self, *args, **kwargs):
+      super(Original, self).save(*args, **kwargs)
+      quality = getattr(django_settings, 'IMAGESTORE_IMAGE_QUALITY', 60)
       storage = self.image.storage
       source_url = self.image.url
       paths = source_url.split('media/')
