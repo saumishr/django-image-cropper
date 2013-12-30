@@ -32,12 +32,6 @@ class Original(models.Model):
     def get_absolute_url(self):
         return 'cropper_crop', [self.pk]
 
-    def save(self, *args, **kwargs):
-        super(Original, self).save(*args, **kwargs)
-        quality = getattr(django_settings, 'IMAGESTORE_IMAGE_QUALITY', 60)
-        source = self.image.path
-        Image.open(source).save(self.image.path, quality=quality)
-
     image = models.ImageField(_('Original image'),
                               upload_to=upload_image,
                               width_field='image_width',
