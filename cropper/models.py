@@ -26,7 +26,7 @@ class Original(models.Model):
     def upload_image(self, filename):
         return u'{path}/{name}.{ext}'.format(path=settings.ROOT,
                                              name=uuid.uuid4().hex,
-                                             ext=os.path.splitext(filename)[1].strip('.'))
+                                             ext=os.path.splitext(filename)[1].strip('.'))     
 
     def __unicode__(self):
         return unicode(self.image)
@@ -34,6 +34,16 @@ class Original(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return 'cropper_crop', [self.pk]
+
+    def save(self, *args, **kwargs):
+      storage = self.image.storage
+      source_url = self.image.url
+      paths = source_url.split('media/')
+      if len(paths) > 0:
+        target = paths[1]      
+        Image.open(source).save(target, quality=quality)
+        #storage.save(target, out_image)
+
 
     image = models.ImageField(_('Original image'),
                               upload_to=upload_image,
