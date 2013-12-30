@@ -4,8 +4,6 @@ from django.core.exceptions import ValidationError
 from django.conf import settings as django_settings
 from cropper import settings
 from PIL import Image
-from sorl.thumbnail import get_thumbnail, delete
-from django.core.files.base import ContentFile
 import os
 import uuid
 
